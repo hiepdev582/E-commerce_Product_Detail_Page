@@ -1,0 +1,11 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: pdp-backend
+
+# Logging configuration
+logging:
+  level:
+    org.springframework.web: INFO
+    com.example.pdp: DEBUG
