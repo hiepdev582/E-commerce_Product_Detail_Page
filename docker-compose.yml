@@ -1,0 +1,104 @@
+version: "3.8"
+
+services:
+  # ==========================================
+  # 1. PostgreSQL Database Service
+  # ==========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: pdp-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pdp_user -d pdp_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pdp-network
+
+  # ==========================================
+  # 2. Redis Cache Service
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: pdp-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pdp-network
+
+  # ==========================================
+  # 3. Spring Boot 3 Backend Service
+  # ==========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pdp-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SERVER_PORT=8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - pdp-network
+
+  # ==========================================
+  # 4. Nuxt 3 Frontend Service (SSR Engine)
+  # ==========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pdp-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+      # API Base URL internal trong mạng docker cho Nuxt SSR
+      - NUXT_PUBLIC_API_BASE=http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - pdp-network
+
+# ==========================================
+# Persistent Volumes & Networks
+# ==========================================
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  pdp-network:
+    driver: bridge
