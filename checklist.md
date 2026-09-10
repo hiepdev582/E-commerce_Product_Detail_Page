@@ -73,10 +73,10 @@ _Mục tiêu: Cố tình viết code "tệ nhất có thể" để đo chỉ s�
 
 ## 📌 PHASE 5: TRIỆT HẠ CLS & HYDRATION COST
 
-- [ ] Tạo **Vue Skeleton Components** với `aspect-ratio` và chiều cao cố định cho khung Bình luận & Sản phẩm liên quan.
-- [ ] Cấu hình `@nuxt/fonts` hoặc `font-display: swap` kết hợp `size-adjust` triệt tiêu FOUT/FOIT.
-- [ ] Chuyển phần Thông số kỹ thuật / Mô tả sản phẩm tĩnh sang **Nuxt Islands** (`<NuxtIsland>` hoặc `.server.vue`) để đạt **0KB Client JS**.
-- [ ] Đo lại chỉ số **CLS = 0.00**.
+- [x] Tạo **Vue Skeleton Components** với `aspect-ratio` và chiều cao cố định cho khung Bình luận & Sản phẩm liên quan.
+- [x] Cấu hình `@nuxt/fonts` hoặc `font-display: swap` kết hợp `size-adjust` triệt tiêu FOUT/FOIT.
+- [x] Chuyển phần Thông số kỹ thuật / Mô tả sản phẩm tĩnh sang **Nuxt Islands** (`<NuxtIsland>` hoặc `.server.vue`) để đạt **0KB Client JS**.
+- [x] Đo lại chỉ số **CLS = 0.00**.
 
 ---
 

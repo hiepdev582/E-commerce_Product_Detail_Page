@@ -66,8 +66,21 @@
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             ]"
           >
-            <span class="w-2 h-2 rounded-full bg-indigo-300 animate-ping"></span>
+            <span class="w-2 h-2 rounded-full bg-indigo-300"></span>
             🧠 Phase 4 (INP & Yielding)
+          </button>
+
+          <button
+            @click="switchPhase(5)"
+            :class="[
+              'px-3.5 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap',
+              activePhase === 5
+                ? 'bg-emerald-400 text-black shadow-lg shadow-emerald-400/30 font-bold'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+            ]"
+          >
+            <span class="w-2 h-2 rounded-full bg-emerald-300 animate-ping"></span>
+            🎯 Phase 5 (CLS=0.00 & 0KB JS)
           </button>
         </div>
 
@@ -210,6 +223,41 @@
           </div>
         </div>
 
+        <!-- Phase 5 Banner: CLS & Hydration Zeroed -->
+        <div
+          v-if="activePhase === 5"
+          class="bg-gradient-to-r from-teal-950 via-slate-900 to-emerald-950 border border-emerald-500/60 rounded-3xl p-6 shadow-2xl space-y-4"
+        >
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <h2 class="font-bold text-lg text-emerald-300 flex items-center gap-2">
+              🎯 Phase 5: Triệt Hạ CLS (CLS = 0.00) & Hydration Overhead (0KB Client JS Nuxt Islands)
+            </h2>
+            <span class="text-xs bg-emerald-500/30 text-emerald-200 border border-emerald-500/50 px-3.5 py-1 rounded-full font-mono font-bold animate-pulse">
+              🎯 CLS = 0.00 | 0KB Client JS
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">1. Vue Skeleton Aspect-Ratio</div>
+              <div class="font-bold text-emerald-300">CLS = 0.00 Tuyệt Đối</div>
+              <div class="text-[11px] text-slate-400">Bảo lưu không gian cố định min-h-[540px], trang không bị đẩy giật khi stream reviews.</div>
+            </div>
+
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">2. Nuxt Island / Server Component</div>
+              <div class="font-bold text-emerald-300">0KB Client JS Payload</div>
+              <div class="text-[11px] text-slate-400">&lt;ProductSpecs.server.vue&gt; chuyển giao HTML thuần, 0 cost hydration trên Client.</div>
+            </div>
+
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">3. Font Loading Strategy</div>
+              <div class="font-bold text-emerald-300">font-display: swap</div>
+              <div class="text-[11px] text-slate-400">Hiển thị chữ ngay với fallback font, triệt tiêu hoàn toàn FOUT/FOIT.</div>
+            </div>
+          </div>
+        </div>
+
         <!-- PRODUCT SECTION GRID -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
@@ -240,7 +288,7 @@
               </div>
             </div>
 
-            <!-- Phase 2 / 3 / 4: Optimized Nuxt Image Hero -->
+            <!-- Phase 2 / 3 / 4 / 5: Optimized Nuxt Image Hero -->
             <ProductHeroOptimized
               v-else
               :hero-image-url="currentCoreData?.heroImageUrl || ''"
@@ -293,26 +341,36 @@
               </div>
             </div>
 
-            <!-- Streaming Inventory Component (Phase 3 & Phase 4) -->
+            <!-- Streaming Inventory Component (Phase 3, 4, 5) -->
             <StreamingInventorySection v-else />
 
-            <!-- Description -->
-            <div class="text-sm text-slate-300 leading-relaxed pt-2">
-              {{ currentCoreData.description }}
-            </div>
+            <!-- Specs & Description: Phase 5 uses Nuxt Island / Server Component (0KB JS) -->
+            <ProductSpecs
+              v-if="activePhase === 5"
+              :description="currentCoreData.description"
+              :specs="currentCoreData.specs"
+            />
 
-            <!-- Specifications List -->
-            <div class="border-t border-slate-800 pt-5 space-y-3">
-              <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                <span>⚙️ Thông Số Kỹ Thuật Nổi Bật</span>
-              </h3>
-              <ul class="text-xs text-slate-300 space-y-2 font-sans">
-                <li v-for="(spec, i) in currentCoreData.specs" :key="i" class="flex items-start gap-2">
-                  <span class="text-emerald-400 mt-0.5">✓</span>
-                  <span>{{ spec }}</span>
-                </li>
-              </ul>
-            </div>
+            <!-- Specs & Description: Phase 0 - 4 fallback -->
+            <template v-else>
+              <!-- Description -->
+              <div class="text-sm text-slate-300 leading-relaxed pt-2">
+                {{ currentCoreData.description }}
+              </div>
+
+              <!-- Specifications List -->
+              <div class="border-t border-slate-800 pt-5 space-y-3">
+                <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                  <span>⚙️ Thông Số Kỹ Thuật Nổi Bật</span>
+                </h3>
+                <ul class="text-xs text-slate-300 space-y-2 font-sans">
+                  <li v-for="(spec, i) in currentCoreData.specs" :key="i" class="flex items-start gap-2">
+                    <span class="text-emerald-400 mt-0.5">✓</span>
+                    <span>{{ spec }}</span>
+                  </li>
+                </ul>
+              </div>
+            </template>
 
             <!-- INP Real-Time Shipping Calculator Widget -->
             <!-- Unoptimized INP Shipping Widget (Phase 0, 2, 3) -->
@@ -351,7 +409,7 @@
               </div>
             </div>
 
-            <!-- Phase 4 INP Optimized Shipping Component -->
+            <!-- Phase 4 & 5 INP Optimized Shipping Component -->
             <ShippingCalcOptimized v-else />
 
           </div>
@@ -396,6 +454,9 @@
           </div>
         </div>
 
+        <!-- Phase 5 Fixed Aspect-Ratio Skeleton Reviews Component -->
+        <ReviewsSkeletonFixed v-else-if="activePhase === 5" />
+
         <!-- Phase 3 / 4 Streaming Reviews Component -->
         <StreamingReviewsSection v-else />
 
@@ -408,9 +469,9 @@
 const config = useRuntimeConfig();
 const route = useRoute();
 
-// Active Phase State (0: Baseline Monolith, 2: LCP Optimized, 3: TTFB Streaming, 4: INP Optimized)
+// Active Phase State (0: Baseline Monolith, 2: LCP Optimized, 3: TTFB Streaming, 4: INP Yielding, 5: CLS=0 & 0KB JS)
 const activePhase = ref(
-  route.query.phase !== undefined ? Number(route.query.phase) : 4
+  route.query.phase !== undefined ? Number(route.query.phase) : 5
 );
 
 const switchPhase = (phase) => {
