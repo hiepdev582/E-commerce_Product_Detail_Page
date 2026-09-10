@@ -33,10 +33,10 @@ _Mục tiêu: Cố tình viết code "tệ nhất có thể" để đo chỉ s�
 
 ## 📌 PHASE 1: ĐO ĐẠC & GHI NHẬN CHỈ SỐ BAN ĐẦU
 
-- [ ] Chạy Chrome DevTools Lighthouse (Mobile & Desktop).
-- [ ] Chạy Performance Tab & Network Tab trong Chrome DevTools.
-- [ ] Dùng Web Vitals Extension đo chỉ số thực tế.
-- [ ] Ghi lại kết quả vào dòng **0. Unoptimized Baseline** ở Bảng Tiến Độ.
+- [x] Chạy Chrome DevTools Lighthouse (Mobile & Desktop).
+- [x] Chạy Performance Tab & Network Tab trong Chrome DevTools.
+- [x] Dùng Web Vitals Extension đo chỉ số thực tế.
+- [x] Ghi lại kết quả vào dòng **0. Unoptimized Baseline** ở Bảng Tiến Độ.
 
 ---
 
