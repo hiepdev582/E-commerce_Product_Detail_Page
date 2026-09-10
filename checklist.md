@@ -73,31 +73,17 @@ _Mục tiêu: Cố tình viết code "tệ nhất có thể" để đo chỉ s�
 
 ## 📌 PHASE 5: TRIỆT HẠ CLS & HYDRATION COST
 
-- [ ] Tạo **Vue Skeleton Components** với `aspect-ratio` và chiều cao cố định cho khung Bình luận & Sản phẩm liên quan.
-- [ ] Cấu hình `@nuxt/fonts` hoặc `font-display: swap` kết hợp `size-adjust` triệt tiêu FOUT/FOIT.
-- [ ] Chuyển phần Thông số kỹ thuật / Mô tả sản phẩm tĩnh sang **Nuxt Islands** (`<NuxtIsland>` hoặc `.server.vue`) để đạt **0KB Client JS**.
-- [ ] Đo lại chỉ số **CLS = 0.00**.
+- [x] Tạo **Vue Skeleton Components** với `aspect-ratio` và chiều cao cố định cho khung Bình luận & Sản phẩm liên quan.
+- [x] Cấu hình `@nuxt/fonts` hoặc `font-display: swap` kết hợp `size-adjust` triệt tiêu FOUT/FOIT.
+- [x] Chuyển phần Thông số kỹ thuật / Mô tả sản phẩm tĩnh sang **Nuxt Islands** (`<NuxtIsland>` hoặc `.server.vue`) để đạt **0KB Client JS**.
+- [x] Đo lại chỉ số **CLS = 0.00**.
 
 ---
 
 ## 📌 PHASE 6: GIA CỦNG WEB SECURITY (SECURITY HARDENING)
 
-- [ ] Cấu hình **Content Security Policy (CSP)** trong Nuxt Config hoặc Spring Security.
-- [ ] Lọc dữ liệu đầu vào bình luận bằng `DOMPurify` (Frontend) hoặc `OWASP Java HTML Sanitizer` (Backend).
-- [ ] Thêm đầy đủ Security Headers: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Strict-Transport-Security`.
-- [ ] Giới hạn CORS domain cụ thể thay vì `*`.
-- [ ] Audit lại bằng Lighthouse Security & SecurityHeaders.com.
-
----
-
-## 📊 BẢNG THEO DÕI TIẾN ĐỘ CHỈ SỐ WEB VITALS
-
-| Giai Đoạn (Phase)             | TTFB        | LCP        | INP         | CLS      | Bundle Size (JS) | Lighthouse Perf | Lighthouse Security |
-| :---------------------------- | :---------- | :--------- | :---------- | :------- | :--------------- | :-------------- | :------------------ |
-| **0. Unoptimized Baseline**   |             |            |             |          |                  |                 |                     |
-| **1. Sau Tối Ưu LCP**         |             |            |             |          |                  |                 |                     |
-| **2. Sau Streaming SSR**      |             |            |             |          |                  |                 |                     |
-| **3. Sau Tối Ưu INP**         |             |            |             |          |                  |                 |                     |
-| **4. Sau Triệt CLS & RSC**    |             |            |             |          |                  |                 |                     |
-| **5. Sau Security Hardening** |             |            |             |          |                  |                 |                     |
-| **🎯 Mục Tiêu (Target)**      | **< 100ms** | **< 1.2s** | **< 200ms** | **0.00** | **Tối thiểu**    | **> 95+**       | **100% Pass**       |
+- [x] Cấu hình **Content Security Policy (CSP)** trong Nuxt Config hoặc Spring Security.
+- [x] Lọc dữ liệu đầu vào bình luận bằng `DOMPurify` (Frontend) hoặc `OWASP Java HTML Sanitizer` (Backend).
+- [x] Thêm đầy đủ Security Headers: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Strict-Transport-Security`.
+- [x] Giới hạn CORS domain cụ thể thay vì `*`.
+- [x] Audit lại bằng Lighthouse Security & SecurityHeaders.com.

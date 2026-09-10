@@ -53,8 +53,11 @@ export default defineNuxtConfig({
         {
           name: "description",
           content:
-            "E-commerce Product Detail Page với tối ưu LCP & Critical Rendering Path",
+            "E-commerce Product Detail Page với tối ưu Performance & Web Security Lab",
         },
+        // Phase 6 Security Hardening Headers
+        { "http-equiv": "X-UA-Compatible", content: "IE=edge" },
+        { name: "referrer", content: "strict-origin-when-cross-origin" },
       ],
       link: [
         // Phase 2 Optimization: Preconnect & DNS-Prefetch cho CDN chứa ảnh

@@ -1,5 +1,5 @@
-/* Anti-pattern FOUT: Loading Google Font via blocking @import without font-display: swap or size-adjust */
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=block");
+/* Phase 5 Optimization: font-display: swap giúp hiển thị chữ lập tức với fallback font, triệt tiêu FOIT/FOUT */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;

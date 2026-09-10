@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nuxt/image": "^1.11.0",
+    "dompurify": "^3.4.15",
     "nuxt": "^3.11.2",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
