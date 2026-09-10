@@ -4,12 +4,28 @@ declare const process: {
   env: Record<string, string | undefined>;
 };
 
+declare module "@nuxt/schema" {
+  interface NuxtConfig {
+    image?: {
+      domains?: string[];
+      quality?: number;
+      format?: string[];
+      [key: string]: any;
+    };
+  }
+}
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  // Anti-pattern: No Nuxt Image or Font optimization modules in Phase 0
-  modules: [],
+  modules: ["@nuxt/image"],
+
+  image: {
+    domains: ["images.unsplash.com", "i.pravatar.cc"],
+    quality: 80,
+    format: ["webp", "avif", "jpg"],
+  },
 
   css: ["~/assets/css/main.css"],
 
@@ -28,14 +44,25 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "Phase 0 Baseline - E-Commerce PDP Lab",
+      title: "E-Commerce Product Detail Page - Performance & Security Lab",
       meta: [
         {
           name: "description",
-          content: "Unoptimized Phase 0 E-commerce Product Detail Page",
+          content:
+            "E-commerce Product Detail Page với tối ưu LCP & Critical Rendering Path",
         },
       ],
-      // Anti-pattern: No <link rel="preconnect"> or <link rel="preload"> for Hero Image or Font
+      link: [
+        // Phase 2 Optimization: Preconnect & DNS-Prefetch cho CDN chứa ảnh
+        { rel: "preconnect", href: "https://images.unsplash.com" },
+        { rel: "dns-prefetch", href: "https://images.unsplash.com" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossorigin: "anonymous",
+        },
+      ],
     },
   },
 });
