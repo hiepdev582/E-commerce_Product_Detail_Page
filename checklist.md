@@ -42,11 +42,11 @@ _Mục tiêu: Cố tình viết code "tệ nhất có thể" để đo chỉ s�
 
 ## 📌 PHASE 2: TỐI ƯU LCP & CRITICAL RENDERING PATH
 
-- [ ] Cài đặt module `@nuxt/image` và chuyển ảnh Hero sang format **AVIF / WebP**.
-- [ ] Thêm responsive breakpoints (`sizes` và `srcset`) cho ảnh Hero.
-- [ ] Thêm `fetchpriority="high"` vào thẻ `<NuxtImg>` hoặc cấu hình `useHead()` preload.
-- [ ] Thêm `<link rel="preconnect">` & `<link rel="dns-prefetch">` tới Domain chứa ảnh.
-- [ ] Đo lại điểm **LCP** và Resource Load Time.
+- [x] Cài đặt module `@nuxt/image` và chuyển ảnh Hero sang format **AVIF / WebP**.
+- [x] Thêm responsive breakpoints (`sizes` và `srcset`) cho ảnh Hero.
+- [x] Thêm `fetchpriority="high"` vào thẻ `<NuxtImg>` hoặc cấu hình `useHead()` preload.
+- [x] Thêm `<link rel="preconnect">` & `<link rel="dns-prefetch">` tới Domain chứa ảnh.
+- [x] Đo lại điểm **LCP** và Resource Load Time.
 
 ---
 
