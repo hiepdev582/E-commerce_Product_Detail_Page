@@ -17,7 +17,7 @@
         </div>
 
         <!-- Interactive Phase Switcher Tabs -->
-        <div class="flex items-center bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 text-xs font-semibold shadow-inner">
+        <div class="flex items-center bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 text-xs font-semibold shadow-inner overflow-x-auto">
           <button
             @click="switchPhase(0)"
             :class="[
@@ -53,8 +53,21 @@
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             ]"
           >
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
             ⚡ Phase 3 (Streaming SSR)
+          </button>
+
+          <button
+            @click="switchPhase(4)"
+            :class="[
+              'px-3.5 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap',
+              activePhase === 4
+                ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 font-bold'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+            ]"
+          >
+            <span class="w-2 h-2 rounded-full bg-indigo-300 animate-ping"></span>
+            🧠 Phase 4 (INP & Yielding)
           </button>
         </div>
 
@@ -62,8 +75,8 @@
         <div class="hidden lg:flex items-center gap-3 bg-slate-900/60 border border-slate-800 px-4 py-2 rounded-2xl text-xs">
           <div class="text-right">
             <div class="text-[10px] text-slate-400 uppercase font-mono">Strategy</div>
-            <div :class="['font-bold', activePhase === 3 ? 'text-emerald-400' : 'text-rose-400']">
-              {{ activePhase === 3 ? 'Fast Core SSR (~50ms)' : 'Monolithic SSR (~1.8s)' }}
+            <div :class="['font-bold', activePhase >= 3 ? 'text-emerald-400' : 'text-rose-400']">
+              {{ activePhase >= 3 ? 'Fast Core SSR (~50ms)' : 'Monolithic SSR (~1.8s)' }}
             </div>
           </div>
         </div>
@@ -72,14 +85,14 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 space-y-8">
       <!-- Error Alert -->
-      <div v-if="monolithError && activePhase !== 3" class="p-5 bg-rose-950/80 text-rose-300 rounded-2xl border border-rose-800 flex items-center gap-3">
+      <div v-if="monolithError && activePhase < 3" class="p-5 bg-rose-950/80 text-rose-300 rounded-2xl border border-rose-800 flex items-center gap-3">
         <span class="text-2xl">⚠️</span>
         <div>
           <h4 class="font-bold text-white">Không thể kết nối tới Backend Spring Boot API</h4>
           <p class="text-xs text-rose-400">Kiểm tra kết quả chạy Docker hoặc backend service ({{ config.public.apiBase }}).</p>
         </div>
       </div>
-      <div v-else-if="coreError && activePhase === 3" class="p-5 bg-rose-950/80 text-rose-300 rounded-2xl border border-rose-800 flex items-center gap-3">
+      <div v-else-if="coreError && activePhase >= 3" class="p-5 bg-rose-950/80 text-rose-300 rounded-2xl border border-rose-800 flex items-center gap-3">
         <span class="text-2xl">⚠️</span>
         <div>
           <h4 class="font-bold text-white">Không thể kết nối tới Spring Boot Core API</h4>
@@ -101,7 +114,7 @@
               🔴 Phase 0: Baseline chưa tối ưu (Anti-Patterns Version)
             </h2>
             <span class="text-xs bg-rose-500/20 text-rose-300 border border-rose-500/40 px-3 py-1 rounded-full font-mono">
-              TTFB ~1.8s | LCP ~4.8s | Raw 4K Image
+              TTFB ~1.8s | LCP ~4.8s | INP Blocking | Raw 4K Image
             </span>
           </div>
           <p class="text-xs text-slate-300 leading-relaxed">
@@ -162,6 +175,41 @@
           </div>
         </div>
 
+        <!-- Phase 4 Banner: INP & Main Thread Optimization -->
+        <div
+          v-if="activePhase === 4"
+          class="bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 border border-indigo-500/50 rounded-3xl p-6 shadow-2xl space-y-4"
+        >
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <h2 class="font-bold text-lg text-indigo-300 flex items-center gap-2">
+              🧠 Phase 4: Tối Ưu INP & Giải Phóng Main Thread (scheduler.yield() & Debounce)
+            </h2>
+            <span class="text-xs bg-indigo-500/30 text-indigo-200 border border-indigo-500/50 px-3.5 py-1 rounded-full font-mono font-bold animate-pulse">
+              🎯 INP Target &lt; 50ms (Smooth 60 FPS)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">1. Debounce Input Handling</div>
+              <div class="font-bold text-indigo-300">Trì hoãn 300ms</div>
+              <div class="text-[11px] text-slate-400">Tránh kích hoạt vòng lặp tính toán nặng liên tục ở mỗi phím gõ.</div>
+            </div>
+
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">2. Long Task Chunking</div>
+              <div class="font-bold text-indigo-300">Chia nhỏ 10.000 items/chunk</div>
+              <div class="text-[11px] text-slate-400">Chia 100.000 items thành 10 khối nhỏ để nhường quyền điều khiển.</div>
+            </div>
+
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">3. Main Thread Yielding</div>
+              <div class="font-bold text-indigo-300">scheduler.yield() API</div>
+              <div class="text-[11px] text-slate-400">Nhường Main Thread cho Browser render frame tiếp theo, giữ giao diện mượt 60fps.</div>
+            </div>
+          </div>
+        </div>
+
         <!-- PRODUCT SECTION GRID -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
@@ -192,7 +240,7 @@
               </div>
             </div>
 
-            <!-- Phase 2 / Phase 3: Optimized Nuxt Image Hero -->
+            <!-- Phase 2 / 3 / 4: Optimized Nuxt Image Hero -->
             <ProductHeroOptimized
               v-else
               :hero-image-url="currentCoreData?.heroImageUrl || ''"
@@ -232,7 +280,7 @@
 
             <!-- Inventory Section Component -->
             <!-- Monolith Inventory (Phase 0 / Phase 2) -->
-            <div v-if="activePhase !== 3 && monolithData">
+            <div v-if="activePhase < 3 && monolithData">
               <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2">
                 <div class="flex items-center justify-between text-sm font-semibold">
                   <span class="text-slate-300">Tình trạng kho hàng:</span>
@@ -245,8 +293,8 @@
               </div>
             </div>
 
-            <!-- Phase 3 Streaming Inventory Component -->
-            <StreamingInventorySection v-else-if="activePhase === 3" />
+            <!-- Streaming Inventory Component (Phase 3 & Phase 4) -->
+            <StreamingInventorySection v-else />
 
             <!-- Description -->
             <div class="text-sm text-slate-300 leading-relaxed pt-2">
@@ -266,8 +314,9 @@
               </ul>
             </div>
 
-            <!-- INP Anti-Pattern Real-Time Shipping Calculator Widget -->
-            <div class="border-t border-slate-800 pt-5 space-y-3">
+            <!-- INP Real-Time Shipping Calculator Widget -->
+            <!-- Unoptimized INP Shipping Widget (Phase 0, 2, 3) -->
+            <div v-if="activePhase < 4" class="border-t border-slate-800 pt-5 space-y-3">
               <div class="flex items-center justify-between">
                 <h3 class="font-bold text-sm text-white">Tính Phí Vận Chuyển Real-Time</h3>
                 <span class="text-[11px] bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2.5 py-0.5 rounded-full font-mono">
@@ -302,12 +351,15 @@
               </div>
             </div>
 
+            <!-- Phase 4 INP Optimized Shipping Component -->
+            <ShippingCalcOptimized v-else />
+
           </div>
         </div>
 
         <!-- REVIEWS SECTION -->
         <!-- Monolithic Reviews (Phase 0 / Phase 2) -->
-        <div v-if="activePhase !== 3 && monolithData" class="mt-16 border-t border-slate-800 pt-10 space-y-6">
+        <div v-if="activePhase < 3 && monolithData" class="mt-16 border-t border-slate-800 pt-10 space-y-6">
           <div class="flex items-center justify-between">
             <h2 class="text-2xl font-bold text-white heading-font">
               💬 Đánh Giá Khách Hàng (Monolithic Payload)
@@ -344,8 +396,8 @@
           </div>
         </div>
 
-        <!-- Phase 3 Streaming Reviews Component -->
-        <StreamingReviewsSection v-else-if="activePhase === 3" />
+        <!-- Phase 3 / 4 Streaming Reviews Component -->
+        <StreamingReviewsSection v-else />
 
       </div>
     </main>
@@ -356,10 +408,9 @@
 const config = useRuntimeConfig();
 const route = useRoute();
 
-// Active Phase State (0: Baseline Monolith, 2: LCP Optimized, 3: TTFB & Streaming SSR)
-// Parse from URL query ?phase=3 or default to 3
+// Active Phase State (0: Baseline Monolith, 2: LCP Optimized, 3: TTFB Streaming, 4: INP Optimized)
 const activePhase = ref(
-  route.query.phase !== undefined ? Number(route.query.phase) : 3
+  route.query.phase !== undefined ? Number(route.query.phase) : 4
 );
 
 const switchPhase = (phase) => {
@@ -374,24 +425,24 @@ const switchPhase = (phase) => {
 const ssrApiBase = config.apiInternal || config.public.apiBase;
 
 // 1. Monolithic Fetch (ONLY called when activePhase is 0 or 2): ~1.75s blocking delay
-const { data: monolithData, error: monolithError } = activePhase.value !== 3
+const { data: monolithData, error: monolithError } = activePhase.value < 3
   ? await useFetch(`${ssrApiBase}/api/products/1/monolith`, { server: true })
   : { data: ref(null), error: ref(null) };
 
-// 2. Fast Core Fetch (ONLY called when activePhase is 3): ~50ms latency -> TTFB < 100ms
-const { data: coreData, error: coreError } = activePhase.value === 3
+// 2. Fast Core Fetch (ONLY called when activePhase is 3 or 4): ~50ms latency -> TTFB < 100ms
+const { data: coreData, error: coreError } = activePhase.value >= 3
   ? await useFetch(`${ssrApiBase}/api/products/1/core`, { server: true })
   : { data: ref(null), error: ref(null) };
 
 // Current Core Product Data computed helper
 const currentCoreData = computed(() => {
-  if (activePhase.value === 3) {
+  if (activePhase.value >= 3) {
     return coreData.value;
   }
   return monolithData.value?.core;
 });
 
-// INP Anti-Pattern State
+// Unoptimized INP Anti-Pattern State
 const postalCode = ref("");
 const computedFee = ref(null);
 const lastCalcDuration = ref(0);
