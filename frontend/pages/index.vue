@@ -79,8 +79,21 @@
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             ]"
           >
-            <span class="w-2 h-2 rounded-full bg-emerald-300 animate-ping"></span>
+            <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
             🎯 Phase 5 (CLS=0.00 & 0KB JS)
+          </button>
+
+          <button
+            @click="switchPhase(6)"
+            :class="[
+              'px-3.5 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap',
+              activePhase === 6
+                ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/30 font-bold'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+            ]"
+          >
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            🛡️ Phase 6 (Security Hardened)
           </button>
         </div>
 
@@ -254,6 +267,41 @@
               <div class="text-slate-400">3. Font Loading Strategy</div>
               <div class="font-bold text-emerald-300">font-display: swap</div>
               <div class="text-[11px] text-slate-400">Hiển thị chữ ngay với fallback font, triệt tiêu hoàn toàn FOUT/FOIT.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 6 Banner: Security Hardening & XSS Protection -->
+        <div
+          v-if="activePhase === 6"
+          class="bg-gradient-to-r from-emerald-950 via-slate-900 to-indigo-950 border border-emerald-500/60 rounded-3xl p-6 shadow-2xl space-y-4"
+        >
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <h2 class="font-bold text-lg text-emerald-300 flex items-center gap-2">
+              🛡️ Phase 6: Web Security Hardening (CSP, DOMPurify XSS Protection & Strict CORS)
+            </h2>
+            <span class="text-xs bg-emerald-500/30 text-emerald-200 border border-emerald-500/50 px-3.5 py-1 rounded-full font-mono font-bold animate-pulse">
+              🛡️ 100% Security Pass
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">1. Stored XSS Protection</div>
+              <div class="font-bold text-emerald-300">DOMPurify Sanitization</div>
+              <div class="text-[11px] text-slate-400">Làm sạch mã độc &lt;img onerror="alert(...)"&gt; trước khi render v-html.</div>
+            </div>
+
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">2. Content Security Policy (CSP)</div>
+              <div class="font-bold text-emerald-300">Strict Directives</div>
+              <div class="text-[11px] text-slate-400">Giới hạn nguồn thực thi Script, Font, Style, Image & Connect.</div>
+            </div>
+
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">3. Strict Domain CORS</div>
+              <div class="font-bold text-emerald-300">No Wildcard '*' Allowed</div>
+              <div class="text-[11px] text-slate-400">Chỉ cho phép origin frontend/localhost được gọi Spring Boot APIs.</div>
             </div>
           </div>
         </div>
@@ -454,6 +502,9 @@
           </div>
         </div>
 
+        <!-- Phase 6 Sanitized XSS-Protected Reviews Component -->
+        <SanitizedReviewsSection v-else-if="activePhase === 6" />
+
         <!-- Phase 5 Fixed Aspect-Ratio Skeleton Reviews Component -->
         <ReviewsSkeletonFixed v-else-if="activePhase === 5" />
 
@@ -469,9 +520,9 @@
 const config = useRuntimeConfig();
 const route = useRoute();
 
-// Active Phase State (0: Baseline Monolith, 2: LCP Optimized, 3: TTFB Streaming, 4: INP Yielding, 5: CLS=0 & 0KB JS)
+// Active Phase State (0: Baseline, 2: LCP, 3: TTFB, 4: INP, 5: CLS=0, 6: Security Hardened)
 const activePhase = ref(
-  route.query.phase !== undefined ? Number(route.query.phase) : 5
+  route.query.phase !== undefined ? Number(route.query.phase) : 6
 );
 
 const switchPhase = (phase) => {

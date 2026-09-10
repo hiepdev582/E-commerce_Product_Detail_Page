@@ -82,22 +82,8 @@ _Mục tiêu: Cố tình viết code "tệ nhất có thể" để đo chỉ s�
 
 ## 📌 PHASE 6: GIA CỦNG WEB SECURITY (SECURITY HARDENING)
 
-- [ ] Cấu hình **Content Security Policy (CSP)** trong Nuxt Config hoặc Spring Security.
-- [ ] Lọc dữ liệu đầu vào bình luận bằng `DOMPurify` (Frontend) hoặc `OWASP Java HTML Sanitizer` (Backend).
-- [ ] Thêm đầy đủ Security Headers: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Strict-Transport-Security`.
-- [ ] Giới hạn CORS domain cụ thể thay vì `*`.
-- [ ] Audit lại bằng Lighthouse Security & SecurityHeaders.com.
-
----
-
-## 📊 BẢNG THEO DÕI TIẾN ĐỘ CHỈ SỐ WEB VITALS
-
-| Giai Đoạn (Phase)             | TTFB        | LCP        | INP         | CLS      | Bundle Size (JS) | Lighthouse Perf | Lighthouse Security |
-| :---------------------------- | :---------- | :--------- | :---------- | :------- | :--------------- | :-------------- | :------------------ |
-| **0. Unoptimized Baseline**   |             |            |             |          |                  |                 |                     |
-| **1. Sau Tối Ưu LCP**         |             |            |             |          |                  |                 |                     |
-| **2. Sau Streaming SSR**      |             |            |             |          |                  |                 |                     |
-| **3. Sau Tối Ưu INP**         |             |            |             |          |                  |                 |                     |
-| **4. Sau Triệt CLS & RSC**    |             |            |             |          |                  |                 |                     |
-| **5. Sau Security Hardening** |             |            |             |          |                  |                 |                     |
-| **🎯 Mục Tiêu (Target)**      | **< 100ms** | **< 1.2s** | **< 200ms** | **0.00** | **Tối thiểu**    | **> 95+**       | **100% Pass**       |
+- [x] Cấu hình **Content Security Policy (CSP)** trong Nuxt Config hoặc Spring Security.
+- [x] Lọc dữ liệu đầu vào bình luận bằng `DOMPurify` (Frontend) hoặc `OWASP Java HTML Sanitizer` (Backend).
+- [x] Thêm đầy đủ Security Headers: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Strict-Transport-Security`.
+- [x] Giới hạn CORS domain cụ thể thay vì `*`.
+- [x] Audit lại bằng Lighthouse Security & SecurityHeaders.com.
