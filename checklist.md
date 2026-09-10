@@ -33,10 +33,10 @@ _Mục tiêu: Cố tình viết code "tệ nhất có thể" để đo chỉ s�
 
 ## 📌 PHASE 1: ĐO ĐẠC & GHI NHẬN CHỈ SỐ BAN ĐẦU
 
-- [ ] Chạy Chrome DevTools Lighthouse (Mobile & Desktop).
-- [ ] Chạy Performance Tab & Network Tab trong Chrome DevTools.
-- [ ] Dùng Web Vitals Extension đo chỉ số thực tế.
-- [ ] Ghi lại kết quả vào dòng **0. Unoptimized Baseline** ở Bảng Tiến Độ.
+- [x] Chạy Chrome DevTools Lighthouse (Mobile & Desktop).
+- [x] Chạy Performance Tab & Network Tab trong Chrome DevTools.
+- [x] Dùng Web Vitals Extension đo chỉ số thực tế.
+- [x] Ghi lại kết quả vào dòng **0. Unoptimized Baseline** ở Bảng Tiến Độ.
 
 ---
 
@@ -52,13 +52,13 @@ _Mục tiêu: Cố tình viết code "tệ nhất có thể" để đo chỉ s�
 
 ## 📌 PHASE 3: TỐI ƯU TTFB & STREAMING SSR
 
-- [ ] Tách Spring Boot API thành 3 REST endpoints riêng biệt:
-  - [ ] `GET /api/products/{id}` (Nhanh - ~50ms)
-  - [ ] `GET /api/inventory/{id}` (Trung bình - ~200ms)
-  - [ ] `GET /api/reviews/{id}` (Chậm - ~1.5s simulation)
-- [ ] Chuyển Nuxt SSR sang dạng **Streaming SSR + Vue `<Suspense>`** (`lazy: true` hoặc Async Components).
-- [ ] Đảm bảo HTML Shell + Core Info được trả về Client dưới **< 100ms**.
-- [ ] Đo lại **TTFB** trên Network Tab (Network Waterfall).
+- [x] Tách Spring Boot API thành 3 REST endpoints riêng biệt:
+  - [x] `GET /api/products/{id}/core` (Nhanh - ~50ms)
+  - [x] `GET /api/inventory/{id}` (Trung bình - ~200ms)
+  - [x] `GET /api/reviews/{id}` (Chậm - ~1.5s simulation)
+- [x] Chuyển Nuxt SSR sang dạng **Streaming SSR + Vue `<Suspense>`** (`lazy: true` hoặc Async Components).
+- [x] Đảm bảo HTML Shell + Core Info được trả về Client dưới **< 100ms**.
+- [x] Đo lại **TTFB** trên Network Tab (Network Waterfall).
 
 ---
 

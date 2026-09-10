@@ -19,7 +19,7 @@ declare module "@nuxt/schema" {
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  modules: ["@nuxt/image"],
+  modules: ["@nuxt/image", "@nuxtjs/tailwindcss"],
 
   image: {
     domains: ["images.unsplash.com", "i.pravatar.cc"],
@@ -37,6 +37,10 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Internal API URL for Nuxt Server SSR calls inside Docker network
+    apiInternal: process.env.NUXT_API_INTERNAL || "http://localhost:8080",
+
+    // Public API URL for Client Browser calls outside Docker container
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://localhost:8080",
     },
