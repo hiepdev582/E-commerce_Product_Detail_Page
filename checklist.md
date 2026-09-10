@@ -64,10 +64,10 @@ _Mục tiêu: Cố tình viết code "tệ nhất có thể" để đo chỉ s�
 
 ## 📌 PHASE 4: TỐI ƯU INP & GIẢI PHÓNG MAIN THREAD
 
-- [ ] Mở Performance Tab, soi các dải đỏ **Long Task (> 50ms)** khi tương tác UI.
-- [ ] Thêm **Debounce / Throttle** cho ô nhập liệu tính phí ship real-time.
-- [ ] Áp dụng **Long Task Chunking**: Dùng `scheduler.yield()` (hoặc fallback `setTimeout(..., 0)` / `requestAnimationFrame` / Web Worker) để chia nhỏ bài toán tính toán 100.000 items.
-- [ ] Đo lại chỉ số **INP < 200ms**.
+- [x] Mở Performance Tab, soi các dải đỏ **Long Task (> 50ms)** khi tương tác UI.
+- [x] Thêm **Debounce / Throttle** cho ô nhập liệu tính phí ship real-time.
+- [x] Áp dụng **Long Task Chunking**: Dùng `scheduler.yield()` (hoặc fallback `setTimeout(..., 0)` / `requestAnimationFrame` / Web Worker) để chia nhỏ bài toán tính toán 100.000 items.
+- [x] Đo lại chỉ số **INP < 200ms**.
 
 ---
 
