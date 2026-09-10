@@ -86,7 +86,9 @@ services:
       - PORT=3000
       - HOST=0.0.0.0
       # API Base URL internal trong mạng docker cho Nuxt SSR
-      - NUXT_PUBLIC_API_BASE=http://backend:8080
+      - NUXT_API_INTERNAL=http://backend:8080
+      # API Base URL public gọi từ Trình duyệt (Host Client)
+      - NUXT_PUBLIC_API_BASE=http://localhost:8080
     depends_on:
       - backend
     networks:

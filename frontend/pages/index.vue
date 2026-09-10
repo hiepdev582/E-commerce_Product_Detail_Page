@@ -1,246 +1,291 @@
 <template>
-  <div class="min-h-screen pb-16">
-    <!-- Header Navbar -->
-    <header class="border-b bg-white/90 backdrop-blur sticky top-0 z-50 shadow-sm">
-      <div
-        class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4"
-      >
+  <div class="min-h-screen bg-slate-950 text-slate-100 pb-20 selection:bg-emerald-500 selection:text-black">
+    <!-- Glassmorphic Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50 shadow-2xl">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
+        <!-- Logo & Brand -->
         <div class="flex items-center gap-3">
-          <span class="text-2xl font-extrabold text-indigo-600 heading-font"
-            >AudioLuxe</span
-          >
-          <!-- Dynamic Phase Badge -->
-          <span
-            :class="[
-              'text-xs px-2.5 py-1 rounded-full font-semibold transition-all flex items-center gap-1.5',
-              activePhase === 0
-                ? 'bg-red-100 text-red-700 border border-red-200'
-                : 'bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold shadow-sm'
-            ]"
-          >
-            <span :class="['w-2 h-2 rounded-full', activePhase === 0 ? 'bg-red-500' : 'bg-emerald-500 animate-ping']"></span>
-            {{ activePhase === 0 ? 'Phase 0: Baseline Anti-Patterns' : '⚡ Phase 2: LCP & Critical Path Optimized' }}
-          </span>
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-emerald-400 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/20">
+            A
+          </div>
+          <div>
+            <span class="text-2xl font-black tracking-tight text-white heading-font bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+              AudioLuxe
+            </span>
+            <div class="text-[10px] font-mono text-emerald-400 tracking-widest uppercase">Performance Lab</div>
+          </div>
         </div>
 
-        <!-- Interactive Phase Switcher -->
-        <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
+        <!-- Interactive Phase Switcher Tabs -->
+        <div class="flex items-center bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 text-xs font-semibold shadow-inner">
           <button
-            @click="activePhase = 0"
+            @click="switchPhase(0)"
             :class="[
-              'px-3 py-1.5 rounded-lg transition-all',
+              'px-3.5 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap',
               activePhase === 0
-                ? 'bg-red-600 text-white shadow'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/30 font-bold'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             ]"
           >
+            <span class="w-2 h-2 rounded-full bg-rose-400"></span>
             🔴 Phase 0 (Baseline)
           </button>
+
           <button
-            @click="activePhase = 2"
+            @click="switchPhase(2)"
             :class="[
-              'px-3 py-1.5 rounded-lg transition-all',
+              'px-3.5 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap',
               activePhase === 2
-                ? 'bg-emerald-600 text-white shadow font-bold'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/30 font-bold'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             ]"
           >
-            ⚡ Phase 2 (Optimized LCP)
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            🖼️ Phase 2 (LCP Only)
+          </button>
+
+          <button
+            @click="switchPhase(3)"
+            :class="[
+              'px-3.5 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap',
+              activePhase === 3
+                ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/30 font-bold'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+            ]"
+          >
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            ⚡ Phase 3 (Streaming SSR)
           </button>
         </div>
 
-        <div class="text-xs font-medium text-slate-500 hidden sm:block">
-          Server Processing Time:
-          <span class="text-amber-600 font-bold"
-            >{{ data?.serverProcessingTimeMs || 0 }}ms</span
-          >
+        <!-- Telemetry HUD Badge -->
+        <div class="hidden lg:flex items-center gap-3 bg-slate-900/60 border border-slate-800 px-4 py-2 rounded-2xl text-xs">
+          <div class="text-right">
+            <div class="text-[10px] text-slate-400 uppercase font-mono">Strategy</div>
+            <div :class="['font-bold', activePhase === 3 ? 'text-emerald-400' : 'text-rose-400']">
+              {{ activePhase === 3 ? 'Fast Core SSR (~50ms)' : 'Monolithic SSR (~1.8s)' }}
+            </div>
+          </div>
         </div>
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 pt-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 space-y-8">
       <!-- Error Alert -->
-      <div v-if="error" class="p-4 bg-red-50 text-red-700 rounded-lg mb-6 border border-red-200">
-        ⚠️ Không thể kết nối tới Backend Spring Boot API ({{
-          config.public.apiBase
-        }}). Đảm bảo Backend đang chạy!
+      <div v-if="monolithError && activePhase !== 3" class="p-5 bg-rose-950/80 text-rose-300 rounded-2xl border border-rose-800 flex items-center gap-3">
+        <span class="text-2xl">⚠️</span>
+        <div>
+          <h4 class="font-bold text-white">Không thể kết nối tới Backend Spring Boot API</h4>
+          <p class="text-xs text-rose-400">Kiểm tra kết quả chạy Docker hoặc backend service ({{ config.public.apiBase }}).</p>
+        </div>
+      </div>
+      <div v-else-if="coreError && activePhase === 3" class="p-5 bg-rose-950/80 text-rose-300 rounded-2xl border border-rose-800 flex items-center gap-3">
+        <span class="text-2xl">⚠️</span>
+        <div>
+          <h4 class="font-bold text-white">Không thể kết nối tới Spring Boot Core API</h4>
+          <p class="text-xs text-rose-400">Đảm bảo backend Spring Boot đã khởi chạy thành công.</p>
+        </div>
       </div>
 
-      <!-- Monolithic Product View -->
-      <div v-else-if="data" class="space-y-6">
-        <!-- Phase 2 Optimization Summary Banner (Visible when Phase 2 active) -->
+      <!-- Main Container -->
+      <div v-else class="space-y-8">
+        
+        <!-- PHASE BANNERS -->
+        <!-- Phase 0 Banner -->
         <div
-          v-if="activePhase === 2"
-          class="bg-gradient-to-r from-emerald-900 via-slate-900 to-indigo-950 text-white rounded-2xl p-5 border border-emerald-500/30 shadow-xl space-y-3"
+          v-if="activePhase === 0"
+          class="bg-gradient-to-r from-rose-950 via-slate-900 to-slate-950 border border-rose-500/40 rounded-3xl p-6 shadow-2xl space-y-3"
         >
           <div class="flex items-center justify-between flex-wrap gap-2">
-            <h2 class="font-bold text-lg text-emerald-400 flex items-center gap-2">
-              ✨ Kỹ Thuật Tối Ưu Đã Thi Công Trong Phase 2:
+            <h2 class="font-bold text-lg text-rose-400 flex items-center gap-2">
+              🔴 Phase 0: Baseline chưa tối ưu (Anti-Patterns Version)
             </h2>
-            <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full font-mono">
-              Target LCP &lt; 1.2s
+            <span class="text-xs bg-rose-500/20 text-rose-300 border border-rose-500/40 px-3 py-1 rounded-full font-mono">
+              TTFB ~1.8s | LCP ~4.8s | Raw 4K Image
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Phiên bản này ngâm Server trong ~1.75s, tải ảnh 4K thô >4MB không nén, vòng lặp blocking 100.000 phần tử trên Main Thread và dính lỗ hổng Stored XSS qua <code class="bg-black/40 px-1 rounded text-rose-300">v-html</code>.
+          </p>
+        </div>
+
+        <!-- Phase 2 Banner -->
+        <div
+          v-if="activePhase === 2"
+          class="bg-gradient-to-r from-amber-950 via-slate-900 to-slate-950 border border-amber-500/40 rounded-3xl p-6 shadow-2xl space-y-3"
+        >
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h2 class="font-bold text-lg text-amber-400 flex items-center gap-2">
+              🖼️ Phase 2: Tối Ưu LCP & Critical Path (Ảnh Hero WebP/AVIF & Preconnect)
+            </h2>
+            <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-full font-mono">
+              Dung lượng ảnh giảm 96% (4.2MB ➔ 150KB)
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Áp dụng module <code class="text-amber-300">&lt;NuxtImg&gt;</code> tự động convert WebP/AVIF, gắn <code class="text-amber-300">fetchpriority="high"</code> và Preconnect tới CDN. Tuy nhiên TTFB vẫn chậm do dùng Monolith API.
+          </p>
+        </div>
+
+        <!-- Phase 3 Banner -->
+        <div
+          v-if="activePhase === 3"
+          class="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-500/50 rounded-3xl p-6 shadow-2xl space-y-4"
+        >
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <h2 class="font-bold text-lg text-emerald-400 flex items-center gap-2">
+              ⚡ Phase 3: Tối Ưu TTFB & Streaming SSR (&lt; 100ms Response)
+            </h2>
+            <span class="text-xs bg-emerald-500/30 text-emerald-300 border border-emerald-500/50 px-3.5 py-1 rounded-full font-mono font-bold animate-pulse">
+              🚀 TTFB Giảm ~95% (&lt; 100ms)
             </span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-            <div class="bg-white/5 p-3 rounded-xl border border-white/10 space-y-1">
-              <div class="text-slate-400">1. Tự Động Định Dạng</div>
-              <div class="font-semibold text-emerald-300">&lt;NuxtImg&gt; WebP/AVIF</div>
-              <div class="text-[11px] text-slate-400">Giảm ~96% dung lượng (4.2MB → 150KB)</div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">1. Fast Core API (~50ms)</div>
+              <div class="font-bold text-emerald-300">SSR HTML Shell &lt; 100ms</div>
+              <div class="text-[11px] text-slate-400">Nuxt Server chỉ chờ Core Info rồi lập tức trả HTML cho Browser.</div>
             </div>
 
-            <div class="bg-white/5 p-3 rounded-xl border border-white/10 space-y-1">
-              <div class="text-slate-400">2. Kết Nối Sớm Socket</div>
-              <div class="font-semibold text-emerald-300">&lt;link rel="preconnect"&gt;</div>
-              <div class="text-[11px] text-slate-400">Tiết kiệm 50-150ms DNS & TLS</div>
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">2. Inventory Status (~200ms)</div>
+              <div class="font-bold text-emerald-300">Client Deferred Fetch</div>
+              <div class="text-[11px] text-slate-400">Browser tự gửi request <code class="text-emerald-300">/api/inventory/1</code> độc lập.</div>
             </div>
 
-            <div class="bg-white/5 p-3 rounded-xl border border-white/10 space-y-1">
-              <div class="text-slate-400">3. Uu Tiên Tải Browser</div>
-              <div class="font-semibold text-emerald-300">fetchpriority="high"</div>
-              <div class="text-[11px] text-slate-400">Được Scanner quét và tải đầu tiên</div>
-            </div>
-
-            <div class="bg-white/5 p-3 rounded-xl border border-white/10 space-y-1">
-              <div class="text-slate-400">4. Phù Hợp Màn Hình</div>
-              <div class="font-semibold text-emerald-300">sizes & srcset Breakpoints</div>
-              <div class="text-[11px] text-slate-400">Tải kích thước chính xác cho device</div>
+            <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-slate-400">3. Slow Reviews (~1.5s)</div>
+              <div class="font-bold text-emerald-300">Client Deferred Fetch</div>
+              <div class="text-[11px] text-slate-400">Browser tự gửi request <code class="text-emerald-300">/api/reviews/1</code> hiển thị trong Network Tab.</div>
             </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <!-- SECTION 1: Product Gallery (LCP Section) -->
+        <!-- PRODUCT SECTION GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          
+          <!-- LEFT COLUMN: Product Image Gallery -->
           <div class="lg:col-span-7 space-y-4">
-            <!-- Phase 0: Baseline Unoptimized -->
-            <div v-if="activePhase === 0" class="space-y-4">
-              <div
-                class="bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 shadow-sm relative"
-              >
-                <!-- 
-                  ANTI-PATTERN LCP:
-                  - Dùng thẻ <img> nguyên bản với URL ảnh 4K không nén (3500px width, >4MB)
-                  - Không dùng <NuxtImg> / WebP / AVIF
-                  - Không set width/height attribute
-                  - Không có fetchpriority="high" hoặc preload
-                -->
+            <!-- Phase 0: Raw Unoptimized Image Showcase -->
+            <div v-if="activePhase === 0 && monolithData" class="space-y-4">
+              <div class="bg-slate-900 rounded-3xl overflow-hidden border border-rose-500/40 shadow-2xl relative">
                 <img
-                  :src="data.core.heroImageUrl"
+                  :src="monolithData.core.heroImageUrl"
                   alt="Product Hero Image"
-                  class="w-full object-cover h-[480px]"
+                  class="w-full object-cover h-[500px]"
                 />
-                <div
-                  class="absolute bottom-3 right-3 bg-red-600/90 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur font-bold flex items-center gap-1.5"
-                >
+                <div class="absolute top-4 left-4 bg-rose-600/90 text-white text-xs px-3.5 py-1.5 rounded-full backdrop-blur-md font-bold shadow">
                   🔴 Unoptimized Raw 4K Image (~4.2MB)
                 </div>
               </div>
 
-              <!-- Thumbnail Gallery (Phase 0) -->
+              <!-- Thumbnails Phase 0 -->
               <div class="grid grid-cols-3 gap-3">
                 <div
-                  v-for="(img, idx) in data.core.galleryImages"
+                  v-for="(img, idx) in monolithData.core.galleryImages"
                   :key="idx"
-                  class="bg-slate-100 rounded-lg overflow-hidden border"
+                  class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 aspect-[4/3]"
                 >
-                  <img :src="img" class="w-full h-24 object-cover" />
+                  <img :src="img" class="w-full h-full object-cover" />
                 </div>
               </div>
             </div>
 
-            <!-- Phase 2: Optimized Nuxt Image Product Hero -->
+            <!-- Phase 2 / Phase 3: Optimized Nuxt Image Hero -->
             <ProductHeroOptimized
-              v-else-if="activePhase === 2"
-              :hero-image-url="data.core.heroImageUrl"
-              :gallery-images="data.core.galleryImages"
+              v-else
+              :hero-image-url="currentCoreData?.heroImageUrl || ''"
+              :gallery-images="currentCoreData?.galleryImages || []"
             />
           </div>
 
-          <!-- SECTION 2: Product Info & Inventory -->
-          <div class="lg:col-span-5 space-y-6">
-            <div>
-              <span
-                class="text-sm font-semibold text-indigo-600 tracking-wide uppercase"
-                >{{ data.core.brand }}</span
-              >
-              <h1 class="text-3xl font-bold mt-1 text-slate-900 heading-font">
-                {{ data.core.title }}
+          <!-- RIGHT COLUMN: Product Info & Actions -->
+          <div v-if="currentCoreData" class="lg:col-span-5 space-y-6 bg-slate-900/60 p-6 sm:p-8 rounded-3xl border border-slate-800 backdrop-blur-xl shadow-2xl">
+            <!-- Brand & Title -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30">
+                  {{ currentCoreData.brand }}
+                </span>
+                <span class="text-xs text-slate-400 font-mono">SKU: PRO-SOUNDX-01</span>
+              </div>
+
+              <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white heading-font">
+                {{ currentCoreData.title }}
               </h1>
-              <div class="flex items-center gap-3 mt-3">
-                <span class="text-3xl font-black text-slate-900"
-                  >${{ data.core.price }}</span
-                >
-                <span class="text-lg text-slate-400 line-through"
-                  >${{ data.core.originalPrice }}</span
-                >
-                <span
-                  class="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded"
-                  >Giảm 25%</span
-                >
+            </div>
+
+            <!-- Price Card -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-950 p-5 rounded-2xl border border-slate-800 flex items-center justify-between">
+              <div>
+                <div class="text-xs text-slate-400">Giá bán ưu đãi</div>
+                <div class="flex items-baseline gap-3 mt-1">
+                  <span class="text-4xl font-black text-white">${{ currentCoreData.price }}</span>
+                  <span class="text-base text-slate-500 line-through">${{ currentCoreData.originalPrice }}</span>
+                </div>
+              </div>
+              <span class="bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-black text-xs px-3.5 py-2 rounded-xl shadow-lg shadow-emerald-500/20">
+                TIẾT KIỆM 25%
+              </span>
+            </div>
+
+            <!-- Inventory Section Component -->
+            <!-- Monolith Inventory (Phase 0 / Phase 2) -->
+            <div v-if="activePhase !== 3 && monolithData">
+              <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2">
+                <div class="flex items-center justify-between text-sm font-semibold">
+                  <span class="text-slate-300">Tình trạng kho hàng:</span>
+                  <span class="text-emerald-400 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Còn {{ monolithData.inventory.stockQuantity }} sản phẩm
+                  </span>
+                </div>
+                <p class="text-xs text-slate-400">{{ monolithData.inventory.estimatedDelivery }}</p>
+                <p class="text-xs text-slate-500">Địa điểm: {{ monolithData.inventory.warehouseLocation }}</p>
               </div>
             </div>
 
-            <!-- Inventory Card -->
-            <div
-              class="bg-indigo-50/60 border border-indigo-100 rounded-xl p-4 space-y-2"
-            >
-              <div
-                class="flex items-center justify-between text-sm font-semibold"
-              >
-                <span class="text-indigo-900">Tình trạng kho hàng:</span>
-                <span class="text-emerald-600 flex items-center gap-1">
-                  <span>●</span> Còn {{ data.inventory.stockQuantity }} sản phẩm
-                </span>
-              </div>
-              <p class="text-xs text-slate-600">
-                {{ data.inventory.estimatedDelivery }}
-              </p>
-              <p class="text-xs text-slate-500">
-                Địa điểm: {{ data.inventory.warehouseLocation }}
-              </p>
-            </div>
+            <!-- Phase 3 Streaming Inventory Component -->
+            <StreamingInventorySection v-else-if="activePhase === 3" />
 
             <!-- Description -->
-            <div class="prose prose-slate text-sm">
-              <p>{{ data.core.description }}</p>
+            <div class="text-sm text-slate-300 leading-relaxed pt-2">
+              {{ currentCoreData.description }}
             </div>
 
-            <!-- Specifications -->
-            <div class="border-t pt-4 space-y-2">
-              <h3 class="font-bold text-sm text-slate-900">Thông số kỹ thuật:</h3>
-              <ul class="text-xs text-slate-600 space-y-1 list-disc pl-4">
-                <li v-for="(spec, i) in data.core.specs" :key="i">{{ spec }}</li>
+            <!-- Specifications List -->
+            <div class="border-t border-slate-800 pt-5 space-y-3">
+              <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                <span>⚙️ Thông Số Kỹ Thuật Nổi Bật</span>
+              </h3>
+              <ul class="text-xs text-slate-300 space-y-2 font-sans">
+                <li v-for="(spec, i) in currentCoreData.specs" :key="i" class="flex items-start gap-2">
+                  <span class="text-emerald-400 mt-0.5">✓</span>
+                  <span>{{ spec }}</span>
+                </li>
               </ul>
             </div>
 
-            <!-- SECTION 3: Real-Time Shipping Calculator (INP Anti-Pattern) -->
-            <div class="border-t pt-4 space-y-3">
-              <h3
-                class="font-bold text-sm text-slate-900 flex items-center justify-between"
-              >
-                <span>Tính phí vận chuyển Real-Time</span>
-                <span class="text-xs text-red-600 font-normal"
-                  >🔴 INP Anti-Pattern (Long Task)</span
-                >
-              </h3>
+            <!-- INP Anti-Pattern Real-Time Shipping Calculator Widget -->
+            <div class="border-t border-slate-800 pt-5 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-sm text-white">Tính Phí Vận Chuyển Real-Time</h3>
+                <span class="text-[11px] bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2.5 py-0.5 rounded-full font-mono">
+                  🔴 INP Anti-Pattern (Long Task)
+                </span>
+              </div>
 
               <div class="flex gap-2">
-                <!-- 
-                  ANTI-PATTERN INP:
-                  - Gõ chữ kích hoạt hàm calculateShippingCostSynchronously ngay lập tức
-                  - Không dùng Debounce
-                  - Chạy vòng lặp 100.000 phần tử đồng bộ trên Main Thread
-                -->
                 <input
                   v-model="postalCode"
                   @input="calculateShippingCostSynchronously"
                   type="text"
                   placeholder="Nhập mã bưu chính (vd: 700000)..."
-                  class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  class="flex-1 px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                 />
                 <button
                   @click="calculateShippingCostSynchronously"
-                  class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700"
+                  class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-600/20"
                 >
                   Tính phí
                 </button>
@@ -248,48 +293,42 @@
 
               <div
                 v-if="computedFee !== null"
-                class="p-3 bg-slate-100 rounded-lg text-xs font-semibold flex justify-between"
+                class="p-3.5 bg-slate-950 border border-slate-800 rounded-xl text-xs flex justify-between items-center"
               >
-                <span>Phí vận chuyển ước tính:</span>
-                <span class="text-indigo-600 font-bold"
-                  >${{ computedFee }} (Đã tính qua
-                  {{ lastCalcDuration.toFixed(1) }}ms blocking execution)</span
-                >
+                <span class="text-slate-400">Phí vận chuyển ước tính:</span>
+                <span class="text-emerald-400 font-bold font-mono">
+                  ${{ computedFee }} <span class="text-[10px] text-slate-500">({{ lastCalcDuration.toFixed(1) }}ms execution)</span>
+                </span>
               </div>
             </div>
+
           </div>
         </div>
 
-        <!-- SECTION 4: Reviews Section (CLS & Security Anti-Pattern) -->
-        <div class="mt-16 border-t pt-10 space-y-6">
+        <!-- REVIEWS SECTION -->
+        <!-- Monolithic Reviews (Phase 0 / Phase 2) -->
+        <div v-if="activePhase !== 3 && monolithData" class="mt-16 border-t border-slate-800 pt-10 space-y-6">
           <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-slate-900 heading-font">
-              Đánh giá từ khách hàng
+            <h2 class="text-2xl font-bold text-white heading-font">
+              💬 Đánh Giá Khách Hàng (Monolithic Payload)
             </h2>
-            <span
-              class="text-xs bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-medium"
-            >
+            <span class="text-xs bg-rose-500/20 text-rose-300 border border-rose-500/40 px-3 py-1 rounded-full font-medium">
               🔴 Security Anti-Pattern (Unsanitized v-html)
             </span>
           </div>
 
           <div class="space-y-4">
             <div
-              v-for="rev in data.reviews"
+              v-for="rev in monolithData.reviews"
               :key="rev.id"
-              class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3"
+              class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3"
             >
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <img
-                    :src="rev.avatarUrl"
-                    class="w-10 h-10 rounded-full border"
-                  />
+                  <img :src="rev.avatarUrl" class="w-10 h-10 rounded-full border border-slate-700 object-cover" />
                   <div>
-                    <h4 class="font-bold text-sm text-slate-900">
-                      {{ rev.author }}
-                    </h4>
-                    <p class="text-xs text-slate-400">{{ rev.date }}</p>
+                    <h4 class="font-bold text-sm text-white">{{ rev.author }}</h4>
+                    <p class="text-xs text-slate-500">{{ rev.date }}</p>
                   </div>
                 </div>
                 <div class="flex text-amber-400 text-sm">
@@ -298,12 +337,16 @@
               </div>
 
               <div
-                class="text-sm text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100"
+                class="text-sm text-slate-300 leading-relaxed bg-slate-950 p-4 rounded-xl border border-slate-800"
                 v-html="rev.commentHtml"
               ></div>
             </div>
           </div>
         </div>
+
+        <!-- Phase 3 Streaming Reviews Component -->
+        <StreamingReviewsSection v-else-if="activePhase === 3" />
+
       </div>
     </main>
   </div>
@@ -311,17 +354,42 @@
 
 <script setup>
 const config = useRuntimeConfig();
+const route = useRoute();
 
-// Active Phase State (0: Baseline, 2: LCP Optimized)
-const activePhase = ref(2);
-
-// Monolithic Fetch (Phase 0/2 share same backend baseline until Phase 3)
-const { data, error } = await useFetch(
-  `${config.public.apiBase}/api/products/1/monolith`,
-  {
-    server: true,
-  },
+// Active Phase State (0: Baseline Monolith, 2: LCP Optimized, 3: TTFB & Streaming SSR)
+// Parse from URL query ?phase=3 or default to 3
+const activePhase = ref(
+  route.query.phase !== undefined ? Number(route.query.phase) : 3
 );
+
+const switchPhase = (phase) => {
+  activePhase.value = phase;
+  navigateTo({
+    path: route.path,
+    query: { phase }
+  });
+};
+
+// Base URL detection helper (Server vs Client inside Docker)
+const ssrApiBase = config.apiInternal || config.public.apiBase;
+
+// 1. Monolithic Fetch (ONLY called when activePhase is 0 or 2): ~1.75s blocking delay
+const { data: monolithData, error: monolithError } = activePhase.value !== 3
+  ? await useFetch(`${ssrApiBase}/api/products/1/monolith`, { server: true })
+  : { data: ref(null), error: ref(null) };
+
+// 2. Fast Core Fetch (ONLY called when activePhase is 3): ~50ms latency -> TTFB < 100ms
+const { data: coreData, error: coreError } = activePhase.value === 3
+  ? await useFetch(`${ssrApiBase}/api/products/1/core`, { server: true })
+  : { data: ref(null), error: ref(null) };
+
+// Current Core Product Data computed helper
+const currentCoreData = computed(() => {
+  if (activePhase.value === 3) {
+    return coreData.value;
+  }
+  return monolithData.value?.core;
+});
 
 // INP Anti-Pattern State
 const postalCode = ref("");
